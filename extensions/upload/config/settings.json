@@ -1,0 +1,11 @@
+{
+  "provider": "aws-s3",
+  "providerOptions": {
+    "accessKeyId": "AKIA5UUHD2UES7IXDGRD",
+    "secretAccessKey": "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",
+    "region": "ap-southeast-2",
+    "params": {
+      "Bucket": "the-natural-design"
+    }
+  }
+}
