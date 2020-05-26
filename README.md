@@ -1,4 +1,7 @@
-# Strapi application
+# e-commerce backend (server) application
 
-A quick description of your strapi application
-# strapi
+Based on Strapi framework
+
+## Launch
+
+Clone the repository on your machine and go to the folder then type `yarn develop`. This will download npm packages and run the application on port `1337`.
