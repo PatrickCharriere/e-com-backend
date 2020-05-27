@@ -11,6 +11,13 @@
   "attributes": {
     "name": {
       "type": "string"
+    },
+    "categories": {
+      "collection": "category"
+    },
+    "category": {
+      "via": "shops",
+      "model": "category"
     }
   }
 }
