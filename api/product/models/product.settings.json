@@ -31,9 +31,12 @@
       "via": "product"
     },
     "categories": {
-      "collection": "category",
       "via": "products",
+      "collection": "category",
       "dominant": true
+    },
+    "id_name": {
+      "type": "string"
     }
   }
 }

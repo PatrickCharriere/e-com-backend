@@ -26,13 +26,17 @@
       "plugin": "upload",
       "required": false
     },
+    "products": {
+      "collection": "product",
+      "via": "categories"
+    },
     "shops": {
       "collection": "shop",
-      "via": "category"
-    },
-    "products": {
       "via": "categories",
-      "collection": "product"
+      "dominant": true
+    },
+    "id_name": {
+      "type": "string"
     }
   }
 }

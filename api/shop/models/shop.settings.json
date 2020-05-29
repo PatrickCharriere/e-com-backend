@@ -9,15 +9,12 @@
     "timestamps": true
   },
   "attributes": {
-    "name": {
+    "title": {
       "type": "string"
     },
     "categories": {
-      "collection": "category"
-    },
-    "category": {
       "via": "shops",
-      "model": "category"
+      "collection": "category"
     }
   }
 }
