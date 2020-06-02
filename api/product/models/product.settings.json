@@ -27,8 +27,8 @@
       "required": false
     },
     "variants": {
-      "collection": "variant",
-      "via": "product"
+      "via": "product",
+      "collection": "variant"
     },
     "categories": {
       "via": "products",

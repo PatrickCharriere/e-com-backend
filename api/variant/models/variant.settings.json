@@ -15,8 +15,8 @@
     "price": {
       "type": "decimal"
     },
-    "images": {
-      "collection": "file",
+    "image": {
+      "model": "file",
       "via": "related",
       "allowedTypes": [
         "images",
@@ -27,14 +27,15 @@
       "required": false
     },
     "available": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "weight": {
       "type": "decimal"
     },
     "product": {
-      "via": "variants",
-      "model": "product"
+      "model": "product",
+      "via": "variants"
     }
   }
 }
