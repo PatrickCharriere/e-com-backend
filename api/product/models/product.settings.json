@@ -27,8 +27,8 @@
       "required": false
     },
     "variants": {
-      "via": "product",
-      "collection": "variant"
+      "collection": "variant",
+      "via": "product"
     },
     "categories": {
       "via": "products",
@@ -36,7 +36,8 @@
       "dominant": true
     },
     "id_name": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     }
   }
 }

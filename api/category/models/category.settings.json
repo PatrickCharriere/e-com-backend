@@ -36,7 +36,8 @@
       "dominant": true
     },
     "id_name": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     }
   }
 }
