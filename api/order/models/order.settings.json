@@ -1,0 +1,72 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "name": "Order"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "orderId": {
+      "type": "uid"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "paid",
+        "declined",
+        "error"
+      ]
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "preparationInProgress",
+        "sent",
+        "received",
+        "notReceived",
+        "cancelled"
+      ]
+    },
+    "products": {
+      "type": "json"
+    },
+    "datePlaced": {
+      "type": "datetime"
+    },
+    "dateSent": {
+      "type": "date"
+    },
+    "dateReceived": {
+      "type": "date"
+    },
+    "totalAmount": {
+      "type": "decimal"
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "EUR",
+        "AUD",
+        "USD"
+      ]
+    },
+    "customerPostalAddress": {
+      "type": "text"
+    },
+    "customerEmailAddress": {
+      "type": "email"
+    },
+    "password": {
+      "type": "password"
+    },
+    "completed": {
+      "type": "boolean"
+    },
+    "Notes": {
+      "type": "richtext"
+    }
+  }
+}
