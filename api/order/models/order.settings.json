@@ -17,7 +17,8 @@
       "enum": [
         "paid",
         "declined",
-        "error"
+        "error",
+        "refunded"
       ]
     },
     "status": {
@@ -32,15 +33,6 @@
     },
     "products": {
       "type": "json"
-    },
-    "datePlaced": {
-      "type": "datetime"
-    },
-    "dateSent": {
-      "type": "date"
-    },
-    "dateReceived": {
-      "type": "date"
     },
     "totalAmount": {
       "type": "decimal"
@@ -59,14 +51,26 @@
     "customerEmailAddress": {
       "type": "email"
     },
-    "password": {
-      "type": "password"
-    },
     "completed": {
       "type": "boolean"
     },
-    "Notes": {
+    "notes": {
       "type": "richtext"
+    },
+    "datePlaced": {
+      "type": "string"
+    },
+    "dateSent": {
+      "type": "string"
+    },
+    "dateReceived": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "customerFullName": {
+      "type": "string"
     }
   }
 }
