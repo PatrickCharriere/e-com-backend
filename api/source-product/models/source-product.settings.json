@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "source_products",
+  "info": {
+    "name": "SourceProduct"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "url": {
+      "type": "string"
+    },
+    "product": {
+      "model": "product",
+      "via": "source_product"
+    },
+    "productName": {
+      "type": "string"
+    }
+  }
+}

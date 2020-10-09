@@ -38,6 +38,10 @@
     "id_name": {
       "type": "string",
       "unique": true
+    },
+    "source_product": {
+      "via": "product",
+      "model": "source-product"
     }
   }
 }
