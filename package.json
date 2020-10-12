@@ -1,8 +1,8 @@
 {
   "name": "e-com-back",
   "private": true,
-  "version": "0.1.0",
-  "description": "A Strapi application",
+  "version": "1.0.0",
+  "description": "e-commerce marketplace",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -14,20 +14,20 @@
     "knex": "^0.21.1",
     "pg": "^8.0.3",
     "sqlite3": "^4.2.0",
-    "strapi": "3.0.0-beta.20.3",
-    "strapi-admin": "3.0.0-beta.20.3",
-    "strapi-connector-bookshelf": "3.0.0-beta.20.3",
-    "strapi-plugin-content-manager": "3.0.0-beta.20.3",
-    "strapi-plugin-content-type-builder": "3.0.0-beta.20.3",
-    "strapi-plugin-email": "3.0.0-beta.20.3",
-    "strapi-plugin-graphql": "3.0.0-beta.20.3",
-    "strapi-plugin-upload": "3.0.0-beta.20.3",
-    "strapi-plugin-users-permissions": "3.0.0-beta.20.3",
-    "strapi-provider-upload-aws-s3": "^3.0.0-beta.20.3",
-    "strapi-utils": "3.0.0-beta.20.3"
+    "strapi": "^3.2.3",
+    "strapi-admin": "3.1.7",
+    "strapi-connector-bookshelf": "3.1.7",
+    "strapi-plugin-content-manager": "3.1.7",
+    "strapi-plugin-content-type-builder": "3.1.7",
+    "strapi-plugin-email": "3.1.7",
+    "strapi-plugin-graphql": "3.1.7",
+    "strapi-plugin-upload": "^3.2.3",
+    "strapi-plugin-users-permissions": "3.1.7",
+    "strapi-provider-upload-aws-s3": "^3.1.7",
+    "strapi-utils": "3.1.7"
   },
   "author": {
-    "name": "A Strapi developer"
+    "name": "Kitepat"
   },
   "strapi": {
     "uuid": "0849e1b6-8766-435a-935c-9b7cc57f8b25"

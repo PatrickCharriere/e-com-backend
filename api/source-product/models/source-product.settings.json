@@ -18,6 +18,15 @@
     },
     "productName": {
       "type": "string"
+    },
+    "lastKnownPrice": {
+      "type": "decimal"
+    },
+    "LastKnownDeliveryPrice": {
+      "type": "decimal"
+    },
+    "lastUpdate": {
+      "type": "date"
     }
   }
 }

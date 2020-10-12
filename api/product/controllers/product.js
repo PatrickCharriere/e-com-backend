@@ -16,7 +16,7 @@ module.exports = {
         model: strapi.models.product,
       });
       
-      if (product.source_product) {
+      if (product.hasOwnProperty('source_product')) {
         delete product.source_product
       }
 
