@@ -26,10 +26,6 @@
       "plugin": "upload",
       "required": false
     },
-    "variants": {
-      "collection": "variant",
-      "via": "product"
-    },
     "categories": {
       "via": "products",
       "collection": "category",
@@ -42,6 +38,10 @@
     "source_product": {
       "via": "product",
       "model": "source-product"
+    },
+    "variants": {
+      "via": "productMini",
+      "collection": "variant"
     }
   }
 }

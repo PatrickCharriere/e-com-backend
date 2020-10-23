@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "variants",
   "info": {
-    "name": "Variant"
+    "name": "Variant",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "title": {
@@ -33,9 +35,9 @@
     "weight": {
       "type": "decimal"
     },
-    "product": {
-      "via": "variants",
-      "model": "product"
+    "productMini": {
+      "model": "product",
+      "via": "variants"
     }
   }
 }
