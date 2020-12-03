@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "labels",
+  "info": {
+    "name": "label"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "articles": {
+      "via": "labels",
+      "collection": "article"
+    }
+  }
+}

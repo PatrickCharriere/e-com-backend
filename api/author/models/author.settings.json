@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "authors",
+  "info": {
+    "name": "Author"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "biography": {
+      "type": "richtext"
+    },
+    "role": {
+      "type": "string"
+    },
+    "articles": {
+      "via": "author",
+      "collection": "article"
+    }
+  }
+}
