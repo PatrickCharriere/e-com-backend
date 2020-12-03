@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/refund-policy",
+      "handler": "refund-policy.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/refund-policy",
+      "handler": "refund-policy.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/refund-policy",
+      "handler": "refund-policy.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

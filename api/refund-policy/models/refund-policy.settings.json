@@ -1,0 +1,17 @@
+{
+  "kind": "singleType",
+  "collectionName": "refund_policies",
+  "info": {
+    "name": "Refund-policy"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "content": {
+      "type": "richtext"
+    }
+  }
+}
