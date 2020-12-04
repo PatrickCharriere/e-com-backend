@@ -6,7 +6,15 @@ This is a great opportunity for you to create your own dedicated server and APIs
 
 It can store restaurants, blog posts, e-commerce products or anything you'd like to have in a database.
 
-## Intro
+This tuto is organized like so:
+
+0. Introduction
+1. Setup online server
+2. Install Nginx on your server
+3. Secure your server with HTTPS
+4. Set HTTP2 to improve reactivity
+
+## 0 Intro
 
 In this introduction, we'll see how to setup a complete server from scratch and for completely for free, based on Strapi, AWS EC2 and RDS.
 
@@ -17,13 +25,11 @@ This text is based on 3 different tutorials that you may choose to follow indivi
 2. https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
 3. https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-with-http-2-support-on-ubuntu-18-04
 
-## Requirements
+### 0.a. Requirements
 
 This server setup, even if it can be 100% free using AWS free tiers will require to enter credit card details in case you would upgrade your machines later on.
 
-## Steps
-
-### 1 Setup online server
+## 1 Setup online server
 
 To setup an online server, you'll need a ubuntu running machine somewhere on the internet with a dedicated IP address to access it.
 
@@ -36,12 +42,13 @@ The main thing bringing me to AWS is their free tier option that will allow me t
 The choice is entirely up to you depending on your specific location and the closest machines but consider first having a look at the locations when you decide which provider to use ;)
 
 So with AWS it would give this: Create an EC2 instance based on your location you can chose to use the free tier option.
+
 ![alt-text](https://user-images.githubusercontent.com/10613478/101115451-1fcfb180-362f-11eb-8187-9eae8da9e2e6.png)
 
 Store the SSH private key with caution and connect to your machine using command line:
 `ssh -i /Path/to/your/key.pem ubuntu@[server_ip_address]`
 
-#### 1.a. Setup a dedicated domain name (optional)
+### 1.a. Setup a dedicated domain name (optional)
 
 If you don't want to use the IP address of your server, and if you will want a HTTPS certificate, you need to use a domain name.
 
@@ -60,7 +67,7 @@ __You now have an online server with a custom domain name that you can access th
 
 `ssh -i /Path/to/your/ssh/key.pem ubuntu@your_custom_domain.tk`
 
-#### 1.b. Possible error cases
+### 1.b. Possible error cases
 
 Here I've got an error on key file permissions:
 
@@ -76,9 +83,9 @@ I tried to fix that by running `chmod 400 mykey.pem` on the key file but unfortu
 
 It turned out that the user name I was using was wrong. Instead of trying to connect with `ubuntu` I had to use `ec2-user` but it was because __I created an EC2 instance based on WRONG amazon linux image instead of the ubuntu one__. So I had to delete my ec2 instance and start a new one based on the right ubuntu image (see screenshot attached in section 1).
 
-### 2 Install Nginx server
+## 2 Install Nginx server
 
-This tuto section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
+This section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
 
 Run `sudo apt update` and `sudo apt upgrade` then `y` and `enter` to confirm and update your ubuntu packages and dependecies.
 
@@ -109,7 +116,8 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 Nginx HTTP (v6)            ALLOW       Anywhere (v6)
 ```
 
-#### Possible error case:
+### Possible error case:
+
 If `sudo ufw status` gives you `Status: inactive` you can use `sudo ufw enable` and `sudo ufw allow 'OpenSSH'` if it doesn't appear in the list straight away. Check that you get the correct output with `sudo ufw status` and restart the server with `sudo systemctl restart nginx`.
 
 Make sure that Nginx server is running by typing `systemctl status nginx`:
@@ -130,9 +138,102 @@ From now on you should be able to access to your server using HTTP like so: `htt
 
 ![alt text](https://assets.digitalocean.com/articles/nginx_1604/default_page.png "Default Nginx page")
 
-#### Possible error case:
+### Possible error case:
 
 From here you might not be able to see your website responding yet. Indeed you might have to update the security rules on AWS to allow connection from HTTP on your machine. To do that, go to your `EC2` dashboard then from the navigation menu (on the left on a computer) click on your instance id in the instances list. Then click on the `Security` tab and then on the security group that might look like that: `sg-0d9e391f87093b840 (launch-wizard-2)`. Click on the `Edit inbound rules` button and add a `HTTP` allowance from everywhere (or only from your computer if you're always working from the same address and that you want to be the only one allowed).
 
 ![alt text](https://user-images.githubusercontent.com/10613478/101118064-16951380-3634-11eb-858d-422e7fa88838.png)
+
+## 3 Secure your server with HTTPS
+
+This section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
+
+`sudo add-apt-repository ppa:certbot/certbot` and press `Enter`
+
+`sudo apt install python3-certbot-nginx` and press `y` when asked to confirm.
+
+Create a file called after your domain name `sudo nano /etc/nginx/sites-available/your_custom_domain.tk` with the following content (replacing `your_custom_domain` with your actual domain name from Freenom):
+
+```
+server {
+
+	if ($host = www.your_custom_domain.tk) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	if ($host = your_custom_domain.tk) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	listen 80;
+	listen [::]:80;
+	# Redirect HTTP to HTTPS
+	return 301 https://$host$request_uri;
+
+	server_name your_custom_domain.tk www.your_custom_domain.tk;
+
+}
+
+server {	
+
+	root /var/www/your_custom_domain.tk/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name your_custom_domain.tk www.your_custom_domain.tk;
+
+	listen [::]:443 ssl http2 ipv6only=on; # managed by Certbot
+	listen 443 ssl http2; # managed by Certbot
+	#ssl_certificate /etc/letsencrypt/live/your_custom_domain.tk/fullchain.pem; # managed by Certbot
+	#ssl_certificate_key /etc/letsencrypt/live/your_custom_domain.tk/privkey.pem; # managed by Certbot
+	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+	ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+		proxy_set_header   X-Forwarded-For $remote_addr;
+		proxy_set_header   Host $http_host;
+		proxy_pass         "http://127.0.0.1:1337";
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Server $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_pass_request_headers on;
+		proxy_headers_hash_max_size 512;
+		proxy_headers_hash_bucket_size 128;
+	}
+
+}
+```
+
+Check that your file's syntax is ok with the command `sudo nginx -t`:
+
+```
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+Then reload your server with: `sudo systemctl reload nginx`
+
+You might also have to update your Security Inbound rules to add access from HTTPS as done earlier with HTTP.
+
+Add the custom rules for the firewall like so 
+```
+sudo ufw allow 'Nginx Full'
+sudo ufw delete allow 'Nginx HTTP'
+```
+
+Obtain your HTTPS certificate from certbot : `sudo certbot --nginx -d`. Enter a correct e-mail address that will receive an extremely handy e-mail before this certificate expires allowing you to renew it on time ;)
+
+Uncomment the two lines beggining with `ssl_certificate` and `ssl_certificate_key` in your `/etc/nginx/sites-available/your_custom_domain.tk` file and restart your server `sudo systemctl reload nginx` if its config is ok `sudo nginx -t`.
+
+Check that you get the Nginx welcome page when accessing `https://you_custom_domain.tk`.
+
+You can check the certificate auto renewal with the following command: `sudo certbot renew --dry-run`.
+
+## 4. Set HTTP2 to improve your server's reactivity
 
