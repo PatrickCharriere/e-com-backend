@@ -1,4 +1,4 @@
-# 100% customized server
+# Setup your 100% customized API for free
 
 Server based on on Strapi framework.
 
@@ -35,10 +35,13 @@ The main thing bringing me to AWS is their free tier option that will allow me t
 
 The choice is entirely up to you depending on your specific location and the closest machines but consider first having a look at the locations when you decide which provider to use ;)
 
-So still with AWS, create an EC2 instance based on your location you can chose to use the free tier option. Store the SSH private key with caution and connect to your machine using command line:
+So with AWS it would give this: Create an EC2 instance based on your location you can chose to use the free tier option.
+![alt-text](https://user-images.githubusercontent.com/10613478/101115451-1fcfb180-362f-11eb-8187-9eae8da9e2e6.png)
+
+Store the SSH private key with caution and connect to your machine using command line:
 `ssh -i /Path/to/your/key.pem ubuntu@[server_ip_address]`
 
-#### 1.a Setup a dedicated domain name (optional)
+#### 1.a. Setup a dedicated domain name (optional)
 
 If you don't want to use the IP address of your server, and if you will want a HTTPS certificate, you need to use a domain name.
 
@@ -57,13 +60,29 @@ __You now have an online server with a custom domain name that you can access th
 
 `ssh -i /Path/to/your/ssh/key.pem ubuntu@your_custom_domain.tk`
 
+#### 1.b. Possible error cases
+
+Here I've got an error on key file permissions:
+
+```
+Permissions 0644 for '/Users/.../ec2-dev.pem' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "/Users/.../ec2-dev.pem": bad permissions
+ubuntu@my-domain.tk: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+```
+
+I tried to fix that by running `chmod 400 mykey.pem` on the key file but unfortunately didn't work.
+
+It turned out that the user name I was using was wrong. Instead of trying to connect with `ubuntu` I had to use `ec2-user` but it was because __I created an EC2 instance based on WRONG amazon linux image instead of the ubuntu one__. So I had to delete my ec2 instance and start a new one based on the right ubuntu image (see screenshot attached in section 1).
+
 ### 2 Install Nginx server
 
 This tuto section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
 
-Run `sudo apt update` and `sudo apt upgrade` to update your ubuntu packages and dependecies.
+Run `sudo apt update` and `sudo apt upgrade` then `y` and `enter` to confirm and update your ubuntu packages and dependecies.
 
-Then run `sudo apt install nginx`.
+Then run `sudo apt install nginx` then `y` and `enter` again.
 
 Run: `sudo ufw app list`
 
@@ -90,6 +109,9 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 Nginx HTTP (v6)            ALLOW       Anywhere (v6)
 ```
 
+#### Possible error case:
+If `sudo ufw status` gives you `Status: inactive` you can use `sudo ufw enable` and `sudo ufw allow 'OpenSSH'` if it doesn't appear in the list straight away. Check that you get the correct output with `sudo ufw status` and restart the server with `sudo systemctl restart nginx`.
+
 Make sure that Nginx server is running by typing `systemctl status nginx`:
 
 ```
@@ -107,3 +129,10 @@ Make sure that Nginx server is running by typing `systemctl status nginx`:
 From now on you should be able to access to your server using HTTP like so: `http://your_server_ip_or_domain_name`
 
 ![alt text](https://assets.digitalocean.com/articles/nginx_1604/default_page.png "Default Nginx page")
+
+#### Possible error case:
+
+From here you might not be able to see your website responding yet. Indeed you might have to update the security rules on AWS to allow connection from HTTP on your machine. To do that, go to your `EC2` dashboard then from the navigation menu (on the left on a computer) click on your instance id in the instances list. Then click on the `Security` tab and then on the security group that might look like that: `sg-0d9e391f87093b840 (launch-wizard-2)`. Click on the `Edit inbound rules` button and add a `HTTP` allowance from everywhere (or only from your computer if you're always working from the same address and that you want to be the only one allowed).
+
+![alt text](https://user-images.githubusercontent.com/10613478/101118064-16951380-3634-11eb-858d-422e7fa88838.png)
+
