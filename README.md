@@ -11,8 +11,9 @@ This tuto is organized like so:
 0. Introduction
 1. Setup online server
 2. Install Nginx on your server
-3. Secure your server with HTTPS
-4. Set HTTP2 to improve reactivity
+3. Secure your server with HTTPS and set HTTP2 to improve reactivity
+4. Create a database
+5. Run your app on the secured server
 
 ## 0 Intro
 
@@ -144,9 +145,9 @@ From here you might not be able to see your website responding yet. Indeed you m
 
 ![alt text](https://user-images.githubusercontent.com/10613478/101118064-16951380-3634-11eb-858d-422e7fa88838.png)
 
-## 3 Secure your server with HTTPS
+## 3 Secure your server with HTTPS and HTTP/2
 
-This section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
+This section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04 and on https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-with-http-2-support-on-ubuntu-18-04
 
 `sudo add-apt-repository ppa:certbot/certbot` and press `Enter`
 
@@ -210,6 +211,10 @@ server {
 }
 ```
 
+Add your site to the nginx site-enabled with:
+
+`sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/`
+
 Check that your file's syntax is ok with the command `sudo nginx -t`:
 
 ```
@@ -235,5 +240,77 @@ Check that you get the Nginx welcome page when accessing `https://you_custom_dom
 
 You can check the certificate auto renewal with the following command: `sudo certbot renew --dry-run`.
 
-## 4. Set HTTP2 to improve your server's reactivity
+You can check that HTTP/2 is enabled by checking the `protocol` column is giving `h2` in the Network section of the console like so:
+
+![alt text](https://assets.digitalocean.com/articles/nginx_http2/http2_check.png)
+
+## 4 Create a database
+
+Same as for EC2 you may chose another provider for your database. It can be running on your computer, Google Cloud Platform, Digital Ocan or any other provider. Let's see how it would be with AWS.
+
+Go to https://console.aws.amazon.com/rds and Create a database. Select a PostgreSQL instance. You can select the Free Tier option. Give a specific name to your database if you wish and a dedicated password, then click on Create.
+
+You will obtain connection details:
+
+```
+Endpoint: [your-database].[region].rds.amazonaws.com
+Port: 5432
+Username: postgres (by default)
+Password: your_password
+```
+
+You can try connecting to your database using a tool such as pgAdmin 4.
+
+Add Inbound rule to allow all traffic from everywhere to be able to connect to your database (or more specific if you want to avoid some risks).
+
+Make sure that your database is publicly accssible from its information pannel:
+
+If not click on `Edit` button then under the `Connectivity` panel click on `Additional configuration` and select `Publicly accessible`. Click on `Continue` and select `Apply immediately` from the radio button. Click on `Modify DB instance`.
+
+## 5 Install pm2, strapi and run all together
+
+We'll now run Strapi on the server to see it appearing on our custom domain.
+
+Run `git clone https://github.com/PatrickCharriere/e-com-backend` or your own specific strapi project to retrieve it on your server.
+
+Install node on your server with `sudo apt install nodejs` then `y`. Then install npm with `sudo apt install npm` then `y`.
+
+Go to your strapi application folder and type `npm i`. Go back to the parent folder.
+
+Install `pm2` to manage your processes with `sudo npm install -g pm2`. This will allow you to manage and supervise your running application from an online dashboard. Register on https://app.pm2.io/ to get a dashboard and a code line to link your applications with this dashboard. Click on connect from the in
+
+Create a pm2 config file `nano ecosystem.config.js` and insert the following content:
+
+```
+module.exports = {
+	apps: [
+	{
+		name: 'DEV strapi',
+		cwd: '/home/ubuntu/e-com-backend',
+		script: 'npm',
+		args: 'run develop',
+		env: {
+			NODE_ENV: 'development',
+			DATABASE_HOST: '[your-database].[region].rds.amazonaws.com',
+			DATABASE_PORT: '5432',
+			DATABASE_NAME: 'postgres',
+			DATABASE_USERNAME: 'postgres',
+			DATABASE_PASSWORD: 'your_password'
+		}
+	}]
+}
+```
+
+Link pm2 to your server to get the logs online with the command: `pm2 link ... ...`. You will obtain this command directly from the pm2 dashboard top right corner by clickin on `CONNECT` button then copy and paste the linking command into your server's terminal.
+
+You might have also noticed that this config file will redirect request on `/` of your domain to `"http://127.0.0.1:1337"`. You may have to update this local address and port depending on where your Strapi application will run. Check this when you will launch strapi it will log the following lines: 
+
+```
+Create your first administrator 💻 by going to the administration panel at:
+
+┌───────────────────────────────────┐
+│ http://ip-172-31-24-46:1337/admin │
+└───────────────────────────────────┘
+```
+
 
