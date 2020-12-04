@@ -4,7 +4,7 @@ Server based on on Strapi framework.
 
 This is a great opportunity for you to create your own dedicated server and APIs to serve and store every information you might need within your custom app!
 
-It can be restaurants, blog posts, e-commerce products or anything else similar to that.
+It can store restaurants, blog posts, e-commerce products or anything you'd like to have in a database.
 
 ## Intro
 
@@ -51,4 +51,59 @@ You may have to wait some minutes or hours for your changes to be spread through
 2. https://whois.domaintools.com/
 3. https://www.whatismyip.com/dns-lookup/
 
+Remember to always update your Freenom DNS config every time your server IP changes.
+
 __You now have an online server with a custom domain name that you can access through `ssh`__
+
+`ssh -i /Path/to/your/ssh/key.pem ubuntu@your_custom_domain.tk`
+
+### 2 Install Nginx server
+
+This tuto section is mainly based on https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04
+
+Run `sudo apt update` and `sudo apt upgrade` to update your ubuntu packages and dependecies.
+
+Then run `sudo apt install nginx`.
+
+Run: `sudo ufw app list`
+
+It should display the following:
+
+```
+Available applications:
+  Nginx Full
+  Nginx HTTP
+  Nginx HTTPS
+  OpenSSH
+```
+
+Then enable HTTP by typing `sudo ufw allow 'Nginx HTTP'` in the console and check that the result with `sudo ufw status` is:
+
+```
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere                  
+Nginx HTTP                 ALLOW       Anywhere                  
+OpenSSH (v6)               ALLOW       Anywhere (v6)             
+Nginx HTTP (v6)            ALLOW       Anywhere (v6)
+```
+
+Make sure that Nginx server is running by typing `systemctl status nginx`:
+
+```
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Fri 2018-04-20 16:08:19 UTC; 3 days ago
+     Docs: man:nginx(8)
+ Main PID: 2369 (nginx)
+    Tasks: 2 (limit: 1153)
+   CGroup: /system.slice/nginx.service
+           ├─2369 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+           └─2380 nginx: worker process
+```
+
+From now on you should be able to access to your server using HTTP like so: `http://your_server_ip_or_domain_name`
+
+![alt text](https://assets.digitalocean.com/articles/nginx_1604/default_page.png "Default Nginx page")
